@@ -41,10 +41,13 @@ export default function Home() {
         router.push('/onboarding/complete')
       }
     } catch (error: any) {
-      if (error?.message?.includes("400")) {
-        setError("Invalid credentials. Please check your email and password.")
+      if (error.message === "Invalid credentials") {
+        setError("Incorrect password. Please try again or use a different email.")
+      } else if (error.message.includes("400")) {
+        setError("Please check your email and password format.")
       } else {
         setError("An unexpected error occurred. Please try again later.")
+        console.error(error)
       }
     }
   }
@@ -89,7 +92,7 @@ export default function Home() {
           type="submit"
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
-          Next
+          Sign Up / Login
         </button>
       </form>
     </main>

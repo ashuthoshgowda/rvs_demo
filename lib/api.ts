@@ -16,6 +16,11 @@ export async function createUser(email: string, password: string): Promise<UserC
       body: JSON.stringify({ email, password }),
     });
     
+    if (response.status === 401) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || "Invalid credentials");
+    }
+    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -113,6 +118,24 @@ export async function checkApiHealth() {
   } catch (error) {
     console.error("API health check failed:", error);
     return false;
+  }
+}
+
+export async function deleteUser(userId: string) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+      method: "DELETE",
+      headers: defaultHeaders,
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
   }
 }
 
